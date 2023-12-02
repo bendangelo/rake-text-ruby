@@ -16,7 +16,7 @@ class RakeText
 
 	def analyse text, stoplist, verbose=false
 		pattern    = buildStopwordRegExPattern stoplist
-		sentences  = text.split(/[.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]/u)
+		sentences  = text.split(/[.!?,;:\t\\-\\"\\(\\)\u2019\u2013\|]|-(?!\w)|(?<!\w)'(?!\w)/u)
 		phrases    = generateCandidateKeywords sentences, pattern
 		wordscores = calculateWordScores phrases
 		candidates = generateCandidateKeywordScores phrases, wordscores
@@ -25,7 +25,7 @@ class RakeText
 			result = candidates.sort_by{|k,v| v}.reverse
 			result.each do |word, score|
 				puts sprintf '%.2f - %s', score, word
-			end	
+			end
 		end
 
 		return candidates
